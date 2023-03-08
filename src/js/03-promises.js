@@ -29,6 +29,8 @@ const onFormSubmit = event => {
     delay += step;
   }
   position = 0;
+  refs.button.disabled = true;
+  refs.form.reset();
 };
 
 function createPromise(position, delay) {
@@ -41,6 +43,9 @@ function createPromise(position, delay) {
         reject({ position, delay });
       }
     }, delay);
+    setTimeout(() => {
+      refs.button.disabled = false;
+    }, 2000);
   });
 }
 
