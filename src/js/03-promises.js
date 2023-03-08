@@ -1,4 +1,6 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import PromiseGenerator from './promis-generator';
+const promiseGenerator = new PromiseGenerator();
 
 const refs = {
   button: document.querySelector('button[type="submit"]'),
@@ -8,7 +10,6 @@ const refs = {
   amount: document.querySelector('input[name="amount"]'),
 };
 
-let timeId;
 let position = 0;
 
 const onFormSubmit = event => {
@@ -19,7 +20,8 @@ const onFormSubmit = event => {
   while (amount > 0) {
     amount -= 1;
     position++;
-    createPromise(position, delay)
+    promiseGenerator
+      .createPromise(position, delay)
       .then(({ position, delay }) => {
         Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
       })
@@ -31,22 +33,9 @@ const onFormSubmit = event => {
   position = 0;
   refs.button.disabled = true;
   refs.form.reset();
+  setTimeout(() => {
+    refs.button.disabled = false;
+  }, 2000);
 };
-
-function createPromise(position, delay) {
-  return new Promise((resolve, reject) => {
-    const shouldResolve = Math.random() > 0.3;
-    timeId = setTimeout(() => {
-      if (shouldResolve) {
-        resolve({ position, delay });
-      } else {
-        reject({ position, delay });
-      }
-    }, delay);
-    setTimeout(() => {
-      refs.button.disabled = false;
-    }, 2000);
-  });
-}
 
 refs.form.addEventListener('submit', onFormSubmit);
