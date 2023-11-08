@@ -2,7 +2,26 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-const refs = {
+interface Refs {
+  button: HTMLButtonElement | null;
+  days: HTMLSpanElement | null;
+  hours: HTMLSpanElement | null;
+  minutes: HTMLSpanElement | null;
+  seconds: HTMLSpanElement | null;
+  timerWrap: HTMLDivElement | null;
+  fieldWrap: NodeListOf<HTMLDivElement> | null;
+  body: HTMLBodyElement | null;
+}
+
+interface Options {
+  enableTime: boolean;
+  time_24hr: boolean;
+  defaultDate: Date;
+  minuteIncrement: number;
+  onClose(selectedDates: Date): void;
+}
+
+const refs: Refs = {
   button: document.querySelector('button[data-start]'),
   days: document.querySelector('[data-days]'),
   hours: document.querySelector('[data-hours]'),
@@ -13,24 +32,27 @@ const refs = {
   body: document.querySelector('body'),
 };
 
-function wrapStyle() {
-  refs.body.style.backgroundColor = 'black';
-  refs.timerWrap.style.cssText =
-    'position: absolute;top: 50%; left: 50%;transform: translateX(-50%) translateY(-50%);color: #17D4FE;font-size: 50px;letter-spacing: 1px;display: flex; gap: 30px;';
-  for (let i = 0; i < refs.fieldWrap.length; i++) {
-    refs.fieldWrap[i].style.cssText =
-      'display: flex;flex-direction : column;gap:10px; text-align: center;    font-family: fantasy;text-transform: uppercase;';
+function wrapStyle(): void {
+  refs.body && (refs.body.style.backgroundColor = 'black');
+  refs.timerWrap &&
+    (refs.timerWrap.style.cssText =
+      'position: absolute;top: 50%; left: 50%;transform: translateX(-50%) translateY(-50%);color: #17D4FE;font-size: 50px;letter-spacing: 1px;display: flex; gap: 30px;');
+  if (refs.fieldWrap) {
+    for (let i = 0; i < refs.fieldWrap.length; i++) {
+      refs.fieldWrap[i].style.cssText =
+        'display: flex;flex-direction : column;gap:10px; text-align: center;    font-family: fantasy;text-transform: uppercase;';
+    }
   }
 }
 wrapStyle();
 
-refs.button.disabled = true;
+refs.button && (refs.button.disabled = true);
 
 let userDate = 0;
 let datenow = 0;
-let timerId;
+let timerId: number;
 
-const options = {
+const options: Options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
@@ -43,25 +65,28 @@ const options = {
         position: 'center-top',
       });
     } else {
-      refs.button.disabled = false;
+      refs.button && (refs.button.disabled = false);
     }
   },
 };
 
-flatpickr('#datetime-picker', options);
-
-refs.button.addEventListener('click', onButtonClick);
+const datetimePicker: HTMLInputElement | null =
+  document.querySelector('#datetime-picker');
+if (datetimePicker) {
+  flatpickr(datetimePicker as Node, options);
+}
+refs.button?.addEventListener('click', onButtonClick);
 
 function onButtonClick() {
   clearInterval(timerId);
-  refs.button.disabled = true;
+  refs.button && (refs.button.disabled = true);
   let timeToEnd = userDate - datenow;
   function start() {
     const finalTime = convertMs(timeToEnd);
-    refs.seconds.textContent = finalTime.seconds;
-    refs.minutes.textContent = finalTime.minutes;
-    refs.hours.textContent = finalTime.hours;
-    refs.days.textContent = finalTime.days;
+    refs.seconds && (refs.seconds.textContent = finalTime.seconds);
+    refs.minutes && (refs.minutes.textContent = finalTime.minutes);
+    refs.hours && (refs.hours.textContent = finalTime.hours);
+    refs.days && (refs.days.textContent = finalTime.days);
     timeToEnd -= 1000;
     if (timeToEnd < 0) {
       clearInterval(timerId);
@@ -78,19 +103,13 @@ function pad(params) {
 }
 
 function convertMs(ms) {
-  // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
-
-  // Remaining days
   const days = pad(Math.floor(ms / day));
-  // Remaining hours
   const hours = pad(Math.floor((ms % day) / hour));
-  // Remaining minutes
   const minutes = pad(Math.floor(((ms % day) % hour) / minute));
-  // Remaining seconds
   const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
 
   return { days, hours, minutes, seconds };
