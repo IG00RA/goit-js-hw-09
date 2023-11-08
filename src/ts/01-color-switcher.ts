@@ -3,7 +3,7 @@ function getRandomHexColor(): string {
 }
 
 interface Refs {
-  body: HTMLBodyElement | null;
+  body: HTMLElement | null;
   startBtn: HTMLButtonElement | null;
   stopBtn: HTMLButtonElement | null;
 }
@@ -14,29 +14,28 @@ const refs: Refs = {
   stopBtn: document.querySelector('button[data-stop]'),
 };
 
-refs.startBtn.addEventListener('click', onStartBtnClick);
-refs.stopBtn.addEventListener('click', onStopBtnClick);
+refs.startBtn?.addEventListener('click', onStartBtnClick);
+if (refs.stopBtn) {
+  refs.stopBtn.addEventListener('click', onStopBtnClick);
+  refs.stopBtn.disabled = true;
+}
 
-refs.stopBtn.disabled = true;
-let switcherID;
+let switcherID: number;
 
-function onStartBtnClick() {
-  refs.stopBtn.disabled = false;
-  refs.startBtn.disabled = true;
-  if (refs.body.classList.contains('cls')) {
-    return;
-  }
-
-  refs.body.classList.add('cls');
-
+function onStartBtnClick(): void {
+  refs.stopBtn && (refs.stopBtn.disabled = false);
+  refs.startBtn && (refs.startBtn.disabled = true);
+  if (refs.body?.classList.contains('cls')) return;
+  refs.body?.classList.add('cls');
   switcherID = setInterval(() => {
-    const backgroundColor = getRandomHexColor();
-    refs.body.style.backgroundColor = backgroundColor;
+    const backgroundColor: string = getRandomHexColor();
+    refs.body && (refs.body.style.backgroundColor = backgroundColor);
   }, 1000);
 }
-function onStopBtnClick() {
+
+function onStopBtnClick(): void {
   clearInterval(switcherID);
-  refs.body.classList.remove('cls');
-  refs.stopBtn.disabled = true;
-  refs.startBtn.disabled = false;
+  refs.body?.classList.remove('cls');
+  refs.stopBtn && (refs.stopBtn.disabled = true);
+  refs.startBtn && (refs.startBtn.disabled = false);
 }
