@@ -18,7 +18,7 @@ interface Options {
   time_24hr: boolean;
   defaultDate: Date;
   minuteIncrement: number;
-  onClose(selectedDates: Date): void;
+  onClose(selectedDates: Date[]): void;
 }
 
 const refs: Refs = {
@@ -73,7 +73,7 @@ const options: Options = {
 const datetimePicker: HTMLInputElement | null =
   document.querySelector('#datetime-picker');
 if (datetimePicker) {
-  flatpickr(datetimePicker as Node, options);
+  flatpickr(datetimePicker, options);
 }
 refs.button?.addEventListener('click', onButtonClick);
 
