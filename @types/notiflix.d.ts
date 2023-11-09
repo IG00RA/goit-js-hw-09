@@ -5,6 +5,7 @@ declare module 'notiflix/build/notiflix-notify-aio' {
     info(message: string, options?: { [key: string]: any }): void;
     warning(message: string, options?: { [key: string]: any }): void;
   }
-}
 
-export const Notify: Notify;
+  const Notify: Notify;
+  export default Notify;
+}
