@@ -2,7 +2,15 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import PromiseGenerator from './promis-generator';
 const promiseGenerator = new PromiseGenerator();
 
-const refs = {
+interface Refs {
+  button: HTMLButtonElement | null;
+  form: HTMLFormElement | null;
+  delay: HTMLInputElement | null;
+  step: HTMLInputElement | null;
+  amount: HTMLInputElement | null;
+}
+
+const refs: Refs = {
   button: document.querySelector('button[type="submit"]'),
   form: document.querySelector('.form'),
   delay: document.querySelector('input[name="delay"]'),
@@ -10,14 +18,14 @@ const refs = {
   amount: document.querySelector('input[name="amount"]'),
 };
 
-let position = 0;
+let position: number = 0;
 
-const onFormSubmit = event => {
+const onFormSubmit = (event: SubmitEvent): void => {
   event.preventDefault();
-  let amount = refs.amount.value;
-  const step = Number(refs.step.value);
-  let delay = Number(refs.delay.value);
-  while (amount > 0) {
+  let amount = Number(refs.amount?.value);
+  const step = Number(refs.step?.value);
+  let delay = Number(refs.delay?.value);
+  while (amount && amount > 0) {
     amount -= 1;
     position++;
     promiseGenerator

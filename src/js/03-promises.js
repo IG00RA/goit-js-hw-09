@@ -9,12 +9,13 @@ const refs = {
     amount: document.querySelector('input[name="amount"]'),
 };
 let position = 0;
-const onFormSubmit = event => {
+const onFormSubmit = (event) => {
+    var _a, _b, _c;
     event.preventDefault();
-    let amount = refs.amount.value;
-    const step = Number(refs.step.value);
-    let delay = Number(refs.delay.value);
-    while (amount > 0) {
+    let amount = Number((_a = refs.amount) === null || _a === void 0 ? void 0 : _a.value);
+    const step = Number((_b = refs.step) === null || _b === void 0 ? void 0 : _b.value);
+    let delay = Number((_c = refs.delay) === null || _c === void 0 ? void 0 : _c.value);
+    while (amount && amount > 0) {
         amount -= 1;
         position++;
         promiseGenerator

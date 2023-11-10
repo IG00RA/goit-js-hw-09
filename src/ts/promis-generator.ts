@@ -1,7 +1,7 @@
 export default class PromiseGenerator {
   constructor() {}
 
-  createPromise(position, delay) {
+  createPromise(position: number, delay: number) {
     return new Promise((resolve, reject) => {
       const shouldResolve = Math.random() > 0.3;
       setTimeout(() => {
