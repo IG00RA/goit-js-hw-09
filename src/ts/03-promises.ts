@@ -39,11 +39,15 @@ const onFormSubmit = (event: SubmitEvent): void => {
     delay += step;
   }
   position = 0;
-  refs.button.disabled = true;
-  refs.form.reset();
+  if (refs.button) {
+    refs.button.disabled = true;
+  }
   setTimeout(() => {
-    refs.button.disabled = false;
+    if (refs.button) {
+      refs.button.disabled = false;
+    }
   }, 2000);
+  refs.form?.reset();
 };
 
-refs.form.addEventListener('submit', onFormSubmit);
+refs.form?.addEventListener('submit', onFormSubmit);

@@ -1,3 +1,4 @@
+var _a;
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import PromiseGenerator from './promis-generator';
 const promiseGenerator = new PromiseGenerator();
@@ -10,7 +11,7 @@ const refs = {
 };
 let position = 0;
 const onFormSubmit = (event) => {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     event.preventDefault();
     let amount = Number((_a = refs.amount) === null || _a === void 0 ? void 0 : _a.value);
     const step = Number((_b = refs.step) === null || _b === void 0 ? void 0 : _b.value);
@@ -29,10 +30,14 @@ const onFormSubmit = (event) => {
         delay += step;
     }
     position = 0;
-    refs.button.disabled = true;
-    refs.form.reset();
+    if (refs.button) {
+        refs.button.disabled = true;
+    }
     setTimeout(() => {
-        refs.button.disabled = false;
+        if (refs.button) {
+            refs.button.disabled = false;
+        }
     }, 2000);
+    (_d = refs.form) === null || _d === void 0 ? void 0 : _d.reset();
 };
-refs.form.addEventListener('submit', onFormSubmit);
+(_a = refs.form) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', onFormSubmit);
